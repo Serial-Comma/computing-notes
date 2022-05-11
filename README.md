@@ -1,3 +1,3 @@
 # computing-notes
 
-private repo, dont share the link pls thx
+Copyright Temasek Junior College 2022
