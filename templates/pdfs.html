@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Viewer</title>
+</head>
+<body>
+    <h1>PDF Viewer</h1>
+    {% for pdf_file in pdf_files %}
+        <a href="{{ url_for('serve_pdf', filename=pdf_file[0]) }}">{{ pdf_file[0] }}</a><br>
+    {% endfor %}
+</body>
+</html>
