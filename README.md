@@ -1,7 +1,7 @@
 # computing-notes
 
 
-# Access the notes using the website at https://computing-notes.onrender.com
+## Access the notes using the website at https://computing-notes.onrender.com
 or find it in /pdfs if you really want to
 
 
