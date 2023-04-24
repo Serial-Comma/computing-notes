@@ -1,7 +1,8 @@
 import os
-from flask import Flask, render_template, send_from_directory, url_for, g
+from flask import Flask, render_template, send_from_directory, url_for, g, request
 from werkzeug.utils import secure_filename
 import sqlite3
+import datetime
 
 app = Flask(__name__)
 
@@ -38,6 +39,13 @@ for filename in os.listdir(PDF_DIR):
         with conn:
             conn.execute('INSERT OR IGNORE INTO pdf_files (filename, filepath) VALUES (?, ?);', (securefilename, filepath))
 
+def ordinal(n: int):
+    if 11 <= (n % 100) <= 13:
+        suffix = 'th'
+    else:
+        suffix = ['th', 'st', 'nd', 'rd', 'th'][min(n % 10, 4)]
+    return str(n) + suffix
+
 @app.teardown_appcontext
 def close_db(error):
     if 'db' in g:
@@ -55,15 +63,39 @@ def serve_pdf(filename):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    conn = get_db()
+    c = conn.cursor()
+    now = datetime.datetime.now()
+    current_month = now.month
+    current_year = now.year
+    c.execute('SELECT count FROM visitor_count WHERE month = ? AND year = ?',(current_month, current_year))
+    result = c.fetchone()
+    if result:
+        count = result[0]
+    else:
+        count = 0
+        c.execute('INSERT INTO visitor_count VALUES(?, ?, ?)', (count, current_month, current_year))
+    count +=1
+    c.execute('UPDATE visitor_count SET count = ? WHERE month = ? AND year = ?',(count, current_month, current_year))
+    conn.commit()
+    conn.close()
+    count = ordinal(int(count))
+    return render_template('index.html', count=count)
 
 # Define the route for the PDF list page
 
 @app.route('/pdfs')
 def pdfs():
-    conn = get_db()
-    pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files').fetchall()
-    return render_template('pdfs.html', pdf_files=pdf_files)
+    print(type('query'))
+    if 'query' in request.args:
+        query = request.args['query']
+        conn = get_db()
+        pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files WHERE filename LIKE ?;', ('%' + query + '%', )).fetchall()
+        return render_template('pdfs.html', pdf_files=pdf_files)
+    else:
+        conn = get_db()
+        pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files').fetchall()
+        return render_template('pdfs.html', pdf_files=pdf_files)
 
 @app.route('/about')
 def about():
