@@ -21,7 +21,10 @@ CREATE TABLE IF NOT EXISTS pdf_files (
     id INTEGER PRIMARY KEY,
     filename TEXT UNIQUE,
     filepath TEXT
+
 );
+
+
 '''
 
 # Create a connection to the database
@@ -30,6 +33,7 @@ conn = sqlite3.connect(DB_PATH)
 # Create the pdf_files table if it doesn't already exist
 with conn:
     conn.execute(SCHEMA)
+    conn.execute("CREATE TABLE IF NOT EXISTS visitor_count (count INT, month INT, year INT);")
 
 # Add all PDF files to the database
 for filename in os.listdir(PDF_DIR):
@@ -90,11 +94,12 @@ def pdfs():
     if 'query' in request.args:
         query = request.args['query']
         conn = get_db()
-        pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files WHERE filename LIKE ?;', ('%' + query + '%', )).fetchall()
+        pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files WHERE filename LIKE ? ORDER BY filename ASC;', ('%' + query + '%', )).fetchall()
+        # print(pdf_files)
         return render_template('pdfs.html', pdf_files=pdf_files)
     else:
         conn = get_db()
-        pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files').fetchall()
+        pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files ORDER BY filename ASC').fetchall()
         return render_template('pdfs.html', pdf_files=pdf_files)
 
 @app.route('/about')
@@ -104,10 +109,6 @@ def about():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
-
-
-#contribution
-
 
 if __name__ == '__main__':
     app.run()
