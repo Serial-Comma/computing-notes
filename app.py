@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, send_from_directory, url_for, g, request
+from flask import Flask, render_template, send_from_directory, url_for, g, request, redirect
 from werkzeug.utils import secure_filename
 import sqlite3
 import datetime
@@ -83,6 +83,8 @@ def index():
     c.execute('UPDATE visitor_count SET count = ? WHERE month = ? AND year = ?',(count, current_month, current_year))
     conn.commit()
     conn.close()
+    if count == 69:
+        return redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ", code=302)
     count = ordinal(int(count))
     return render_template('index.html', count=count)
 
