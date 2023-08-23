@@ -10,19 +10,24 @@ body, h1, h3, form, input, a {
 body {
     background-color: #f9f9f9;
     color: #333;
-    text-align: center;
     padding: 20px;
     line-height: 1.6;
 }
 
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-left: 20px;
+}
+
 h1 {
-    font-size: 40px;
+    font-size: 36px;
     margin-bottom: 20px;
     color: #222;
 }
 
 h3 {
-    font-size: 28px;
+    font-size: 24px;
     margin-bottom: 10px;
     color: #555;
 }
@@ -37,6 +42,8 @@ input[type="text"] {
     border: 2px solid #ccc;
     outline: none;
     transition: border-color 0.3s ease-in-out;
+    width: 100%;
+    max-width: 400px;
 }
 
 input[type="submit"] {
@@ -50,9 +57,15 @@ input[type="submit"] {
 }
 
 /* Styling for PDF links */
-a {
-    display: inline-block;
-    margin: 8px;
+.pdf-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.pdf-link {
+    margin-bottom: 10px;
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -61,14 +74,14 @@ a {
     transition: background-color 0.3s ease-in-out;
 }
 
-a:hover {
+.pdf-link:hover {
     background-color: #0056b3;
 }
 
-/* Responsive layout for larger screens */
-@media only screen and (min-width: 768px) {
-    body {
-        max-width: 800px;
-        margin: 0 auto;
+/* Responsive layout */
+@media only screen and (max-width: 768px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 }

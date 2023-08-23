@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,14 +6,18 @@
     <link rel="stylesheet" type="text/css" href="../static/css/pdfs.css">
 </head>
 <body>
-    <h1>PDF Viewer</h1>
-    <h3>Search</h3>
+    <div class="container">
+        <h1>PDF Viewer</h1>
+        <h3>Search</h3>
         <form action="{{ url_for('pdfs')}}" method="GET">
-            <input type="text" name="query">
+            <input type="text" name="query" placeholder="Enter your search query...">
             <input type="submit" value="Search">
         </form>
-    {% for pdf_file in pdf_files %}
-        <a href="{{ url_for('serve_pdf', filename=pdf_file[0]) }}">{{ pdf_file[0] }}</a><br>
-    {% endfor %}
+        <div class="pdf-links">
+            {% for pdf_file in pdf_files %}
+                <a class="pdf-link" href="{{ url_for('serve_pdf', filename=pdf_file[0]) }}">{{ pdf_file[0] }}</a>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>
