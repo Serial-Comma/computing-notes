@@ -13,11 +13,17 @@
             <input type="text" name="query" placeholder="Enter your search query...">
             <input type="submit" value="Search">
         </form>
+        <div class="no-results">
+            {% if no_results %}
+            <p class="no-result">Nothing found :(</p>
+            {% else %}
+        </div>
         <div class="pdf-links">
-            {% for pdf_file in pdf_files %}
-                <a class="pdf-link" href="{{ url_for('serve_pdf', filename=pdf_file[0]) }}">{{ pdf_file[0] }}</a>
+            {% for pdf in pdf_files %}
+            <a class="pdf-link" href="{{ url_for('serve_pdf', filename=pdf[1]) }}">{{ pdf[0] }}</a>
             {% endfor %}
         </div>
+            {% endif %}
     </div>
 </body>
 </html>

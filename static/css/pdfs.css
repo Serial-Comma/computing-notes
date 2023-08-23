@@ -78,6 +78,23 @@ input[type="submit"] {
     background-color: #0056b3;
 }
 
+.no-results {
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.no-result {
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    color: grey;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+
 /* Responsive layout */
 @media only screen and (max-width: 768px) {
     .container {
