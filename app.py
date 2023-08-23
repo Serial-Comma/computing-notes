@@ -7,8 +7,7 @@ import datetime
 app = Flask(__name__)
 
 # Define the directory where PDF files are stored
-PDF_DIR = 'pdfs'
-
+PDF_DIR = './pdfs'
 # Define the name of the SQLite database file
 DB_FILENAME = 'pdfs.db'
 
@@ -27,6 +26,11 @@ CREATE TABLE IF NOT EXISTS pdf_files (
 
 '''
 
+def custom_title(s):
+    words = s.split(' ')
+    title_words = [word.capitalize() if word.islower() else word for word in words]
+    return ' '.join(title_words)
+
 # Create a connection to the database
 conn = sqlite3.connect(DB_PATH)
 
@@ -38,10 +42,12 @@ with conn:
 # Add all PDF files to the database
 for filename in os.listdir(PDF_DIR):
     if filename.endswith('.pdf'):
-        filepath = os.path.join(PDF_DIR, filename)
+        filepath = os.path.join('', filename)
         securefilename = secure_filename(filename)
+        clean_filename = os.path.splitext(securefilename)[0]  # Remove ".pdf" extension
         with conn:
-            conn.execute('INSERT OR IGNORE INTO pdf_files (filename, filepath) VALUES (?, ?);', (securefilename, filepath))
+            conn.execute('INSERT OR IGNORE INTO pdf_files (filename, filepath) VALUES (?, ?);', (clean_filename, filepath))
+
 
 def ordinal(n: int):
     if 11 <= (n % 100) <= 13:
@@ -63,7 +69,7 @@ def get_db():
 # Define the route for serving PDF files
 @app.route('/pdfs/<path:filename>')
 def serve_pdf(filename):
-    return send_from_directory(PDF_DIR, filename)
+    return send_from_directory(PDF_DIR,filename)
 
 @app.route('/')
 def index():
@@ -92,17 +98,26 @@ def index():
 
 @app.route('/pdfs')
 def pdfs():
-    print(type('query'))
     if 'query' in request.args:
         query = request.args['query']
+        if query == "69":
+            return redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ", code=302)
         conn = get_db()
         pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files WHERE filename LIKE ? ORDER BY filename ASC;', ('%' + query + '%', )).fetchall()
-        # print(pdf_files)
-        return render_template('pdfs.html', pdf_files=pdf_files)
+        clean_pdf_files = []
+        for filename, filepath in pdf_files:
+            clean_pdf_files.append((custom_title(filename.replace('_', ' '))[3:], filepath))
+        if not clean_pdf_files:  # No results found
+            return render_template('pdfs.html', pdf_files=None, no_results=True)
+        return render_template('pdfs.html', pdf_files=clean_pdf_files)
     else:
         conn = get_db()
         pdf_files = conn.execute('SELECT filename, filepath FROM pdf_files ORDER BY filename ASC').fetchall()
-        return render_template('pdfs.html', pdf_files=pdf_files)
+        clean_pdf_files = []
+        for filename, filepath in pdf_files:
+            clean_pdf_files.append((custom_title(filename.replace('_', ' '))[3:], filepath))
+        return render_template('pdfs.html', pdf_files=clean_pdf_files)
+
 
 @app.route('/about')
 def about():
