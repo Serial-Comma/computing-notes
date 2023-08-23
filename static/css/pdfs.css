@@ -1,0 +1,74 @@
+/* Reset some default styles */
+body, h1, h3, form, input, a {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Basic styling */
+body {
+    background-color: #f9f9f9;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+h3 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+form {
+    margin-bottom: 30px;
+}
+
+input[type="text"] {
+    padding: 12px;
+    border-radius: 6px;
+    border: 2px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input[type="submit"] {
+    padding: 12px 24px;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Styling for PDF links */
+a {
+    display: inline-block;
+    margin: 8px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive layout for larger screens */
+@media only screen and (min-width: 768px) {
+    body {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+}
